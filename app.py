@@ -4,13 +4,13 @@ import numpy as np
 import streamlit as st
 import tensorflow as tf
 import seaborn as sns
-import  sys
 import matplotlib.pyplot as plt
 from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.preprocessing.image import img_to_array
 from sklearn.datasets import load_files
 from keras.utils import np_utils
+from termcolor import colored
 # from keras.preprocessing.image import array_to_img, img_to_array, load_img
 from tensorflow.keras.utils import array_to_img, img_to_array, load_img
 
@@ -166,24 +166,45 @@ if clicked:
     # Plotting Random Sample of test images, their predicted labels, and ground truth
     y_pred = model.predict(x_test)
     fig = plt.figure(figsize=(10, 10))
+    
+    # k=trget_labels[0]   
+    # def color_text(true_idx, pred_idx,k):
+    #     if true_idx == pred_idx:
+    #         return '\033[32m' + k + '\033[0m'  # green color
+    #     else:
+    #         return '\033[31m' + k + '\033[0m' 
+       
     for i, idx in enumerate(np.random.choice(x_test.shape[0], size=16, replace=False)):
         ax = fig.add_subplot(4, 4, i + 1, xticks=[], yticks=[])
 
         st.image(np.squeeze(x_test[idx]))
         pred_idx = np.argmax(y_pred[idx])
         true_idx = np.argmax(y_test[idx])
-        st.write("predicted:\n", target_labels[pred_idx])
-        st.write("Ground Truth : ", target_labels[true_idx])
+        # st.write("predicted:\n", target_labels[pred_idx])
+        # st.write("Ground Truth : \n",target_labels[true_idx])
+        def header(url):
+            st.markdown(f'<h6 style="color:#33ff33;">{url}</h6>', unsafe_allow_html=True)
+        def header1(url):
+            st.markdown(f'<h6 style="color:#Ff0000;">{url}</h6>', unsafe_allow_html=True)
+            
+   
 
+        if(target_labels[pred_idx]==target_labels[true_idx]):
+            st.write("Predicted:")
+            header(target_labels[pred_idx])
+            st.write("Ground_truth:\n")
+            header(target_labels[true_idx])
+            
+        else:
+        
+            st.write("Predicted:")
+            header1(target_labels[pred_idx])
+            st.write("Ground_truth:\n")
+            header(target_labels[true_idx])
         # st.write("{} ({})".format(target_labels[pred_idx], target_labels[true_idx]))
 
+ 
 
-def color_text(true_idx, pred_idx):
-    if true_idx == pred_idx:
-        return '\033[32m' + pred_idx + '\033[0m'  # green color
-    else:
-        return '\033[31m' + pred_idx + '\033[0m' 
-        print(color_text(true_idx, pred_idx))
 
 
 
